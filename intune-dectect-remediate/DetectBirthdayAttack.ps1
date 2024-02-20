@@ -2,6 +2,8 @@
 # Description: This script detects weak cipher suites
 # https://nvd.nist.gov/vuln/detail/CVE-2016-2183
 
+Import-Module -Name TlsCipherSuite
+
 $WeakCipherSuites = @(
     "DES",
     "3DES",

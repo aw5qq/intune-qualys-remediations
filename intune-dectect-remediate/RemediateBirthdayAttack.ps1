@@ -2,6 +2,8 @@
 # Description: This script remediates weak cipher suites by disabling them.
 # https://nvd.nist.gov/vuln/detail/CVE-2016-2183
 
+Import-Module -Name TlsCipherSuite
+
 $WeakCipherSuites = @(
     "DES",
     "3DES",
