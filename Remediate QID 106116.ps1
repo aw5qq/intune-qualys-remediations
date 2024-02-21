@@ -1,6 +1,6 @@
-﻿# Remediate QID 106116
-# https://cve.report/qid/106116
-
+﻿# Author: Andrew Welch (aw5qq@virginia.edu)
+# Description: This script removes Microsoft Visual C++ 2010 Redistributable and installs Visual C++ 2015-2022 Redistributable.
+# QID: 106116
 
 # Remove Microsoft Visual C++ 2010 Redistributable
 
@@ -29,6 +29,19 @@ if ($vc2010Redist) {
     # Create the download folder if it doesn't exist
     if (-not (Test-Path $downloadFolder)) {
         New-Item -Path $downloadFolder -ItemType Directory | Out-Null
+    }
+
+    # Check if Invoke-WebRequest cmdlet is available
+    if (-not (Get-Command Invoke-WebRequest -ErrorAction SilentlyContinue)) {
+        Write-Host "Invoke-WebRequest cmdlet is not available. Installing required package..."
+        Install-PackageProvider -Name NuGet -Force | Out-Null
+        Install-Module -Name PowerShellGet -Force | Out-Null
+        Install-Module -Name PackageManagement -Force | Out-Null
+        Install-Package -Name PowerShellGet -Force | Out-Null
+        Install-Package -Name PackageManagement -Force | Out-Null
+        Install-Package -Name PowerShellGet -Force | Out-Null
+        Install-Package -Name PackageManagement -Force | Out-Null
+        Write-Host "Required package installed successfully."
     }
 
     # Download and install the Visual C++ Redistributables for x86 and x64

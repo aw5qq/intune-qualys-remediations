@@ -1,6 +1,6 @@
-﻿# Remediate QID 106089
-# https://cve.report/qid/106089
-
+﻿# Author: Andrew Welch (aw5qq@virginia.edu)
+# Description: This script removes old versions of .NET Core and installs the latest ASP.NET Core Runtime.
+# QID: 106089
 
 # Install the .NET Core Uninstall Tool using MSI installer
 function InstallDotNetCoreUninstallTool {
@@ -25,7 +25,7 @@ function InstallDotNetCoreUninstallTool {
 # Install the latest ASP.NET Core Runtime
 function InstallLatestAspNetCoreRuntime {
     Write-Host "Installing latest ASP.NET Core Runtime..."
-    iex "& { $(irm 'https://dot.net/v1/dotnet-install.ps1') } -Runtime aspnetcore"
+    Invoke-Expression "& { $(Invoke-RestMethod 'https://dot.net/v1/dotnet-install.ps1') } -Runtime aspnetcore"
     Write-Host "Latest ASP.NET Core Runtime installed"
 }
 
