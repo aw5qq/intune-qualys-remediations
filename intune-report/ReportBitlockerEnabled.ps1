@@ -2,11 +2,11 @@
 # Description: This script reports if Bitlocker is enabled
 
 # Check if Bitlocker is enabled
-$BitlockerStatus = Get-BitLockerVolume | Select-Object -Property MountPoint, VolumeStatus, ProtectionStatus
-if ($BitlockerStatus.VolumeStatus -eq "FullyEncrypted" -and $BitlockerStatus.ProtectionStatus -eq "On") {
+$BitlockerStatus = Get-BitLockerVolume | Select-Object -Property VolumeStatus
+if ($BitlockerStatus.VolumeStatus -eq "FullyEncrypted"){
     Write-Output "Bitlocker is enabled"
     Exit 0
-} else {
+}else {
     Write-Output "Bitlocker is not enabled"
     Exit 1
 }
