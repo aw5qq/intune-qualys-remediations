@@ -9,27 +9,21 @@ $WeakCipherSuites = @(
     "RC"
 )
 
-$weakCipherDetected = $false
 $weakCipherList = ""
 
-Foreach ($WeakCipherSuite in $WeakCipherSuites) {
+foreach ($WeakCipherSuite in $WeakCipherSuites) {
     Write-Host "Processing cipher suite: $WeakCipherSuite"
     $CipherSuites = Get-TlsCipherSuite -Name $WeakCipherSuite
 
     if ($CipherSuites) {
-        Foreach ($CipherSuite in $CipherSuites) {
-            $weakCipherDetected = $true
+        foreach ($CipherSuite in $CipherSuites) {
             $weakCipherList += "$($CipherSuite.Name), "
-            Disable-TlsCipherSuite -Name $($CipherSuite.Name)
+            Disable-TlsCipherSuite -Name $CipherSuite.Name
         }
     } 
-    
-    else {
-        #Write-Host "No cipher suites found for: $WeakCipherSuite"
-    }
 }
 
-if ($weakCipherDetected) {
+if ($weakCipherList) {
     $weakCipherList = $weakCipherList.TrimEnd(", ")
     Write-Host "Weak cipher suites fixed: $weakCipherList"
     exit 0
