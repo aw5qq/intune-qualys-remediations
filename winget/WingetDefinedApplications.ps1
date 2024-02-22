@@ -3,7 +3,9 @@
 
 # Define a list of applications to upgrade
 $applications = @(
-  "Mozilla.Firefox"
+  "Mozilla.Firefox",
+  "Google.Chrome",
+  "Microsoft.Edge"
 )
 
 $wingetexe = (Get-Command winget.exe).Source
@@ -23,8 +25,9 @@ $region = (Get-Culture).TwoLetterISOLanguageName
 # Loop through the list and upgrade each application
 foreach ($app in $applications) {
   try {
-    sysget upgrade --accept-package-agreements --include-unknown --accept-source-agreements --locale $region --id $app
+    sysget upgrade --id $app --accept-package-agreements --include-unknown --accept-source-agreements --locale $region 
   } catch {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
 }
+
