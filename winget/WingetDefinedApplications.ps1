@@ -19,13 +19,14 @@ if (Get-Alias sysget -ErrorAction SilentlyContinue) {
 # Create the sysget alias so winget can be run as system
 New-Alias -Name sysget -Value "$wingetexe" -ErrorAction SilentlyContinue
 
-# Get the current machine's 2-letter geographic region
-$region = (Get-Culture).TwoLetterISOLanguageName
+# Get the current machine region and language
+$region = Get-WinSystemLocale
+Write-Host $region
 
 # Loop through the list and upgrade each application
 foreach ($app in $applications) {
   try {
-    sysget upgrade --id $app --accept-package-agreements --include-unknown --accept-source-agreements --locale $region 
+    sysget upgrade --id $app --accept-package-agreements --include-unknown --accept-source-agreements --locale $region
   } catch {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
