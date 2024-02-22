@@ -30,4 +30,3 @@ foreach ($app in $applications) {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
 }
-
