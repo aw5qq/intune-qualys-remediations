@@ -3,35 +3,25 @@
 # https://nvd.nist.gov/vuln/detail/CVE-2016-2183
 
 $WeakCipherSuites = @(
-    "DES",
     "3DES",
     "IDEA",
-    "RC"
+    "RC",
+    "DES"
 )
 
 $weakCipherDetected = $false
-$weakCipherList = ""
 
 Foreach ($WeakCipherSuite in $WeakCipherSuites) {
-    #Write-Host "Processing cipher suite: $WeakCipherSuite"
     $CipherSuites = Get-TlsCipherSuite -Name $WeakCipherSuite
 
     if ($CipherSuites) {
-        Foreach ($CipherSuite in $CipherSuites) {
-            $weakCipherDetected = $true
-            $weakCipherList += "$($CipherSuite.Name), "
-            #Write-Host "Weak cipher suite detected: $($CipherSuite.Name)"
-        }
-    } 
-    
-    else {
-        #Write-Host "No cipher suites found for: $WeakCipherSuite"
+        $weakCipherDetected = $true
+        break
     }
 }
 
 if ($weakCipherDetected) {
-    $weakCipherList = $weakCipherList.TrimEnd(", ")
-    Write-Host "Weak cipher suites found: $weakCipherList"
+    Write-Host "Weak cipher suites found."
     exit 1
 }
 else {
