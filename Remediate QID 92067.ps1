@@ -1,5 +1,5 @@
 # Author: Andrew Welch (aw5qq@virginia.edu)
-# Description: This script remediates the "EnableCertPaddingCheck" registry key to prevent the "CertPaddingCheck" vulnerability.
+# Description: This script sets the "EnableHttp2Tls" registry key to prevent the "HTTP/2 Protocol Vulnerability".
 # QID: 92067
 
 # Define the registry key paths and values to add
