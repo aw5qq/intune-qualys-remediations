@@ -3,7 +3,11 @@
 
 $SMBv1 = Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
 
-if ($SMBv1.State -eq "Enabled") {
+if ($SMBv1 -eq $null) {
+    Write-Host "SMBv1 protocol feature not found."
+    Exit 0
+}
+elseif ($SMBv1.State -eq "Enabled") {
     Write-Host "SMBv1 protocol is enabled."
     Exit 1
 }
