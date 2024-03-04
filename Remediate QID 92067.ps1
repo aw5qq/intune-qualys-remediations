@@ -8,13 +8,14 @@ $Key1ValueName = "EnableHttp2Tls"
 $Key1ValueData = "1"
 
 try {
-    # Create the registry key path for Key1 if it doesn't exist
+    # Check if the registry key already exists
     if (!(Test-Path $Key1Path)) {
+        # Create the registry key path for Key1 if it doesn't exist
         New-Item -Path $Key1Path -Force
         Write-Output "$Key1Path Created"
     }
     
-    # Create the registry key and value for Key1
+    # Create or update the registry key and value for Key1
     Set-ItemProperty -Path $Key1Path -Name $Key1ValueName -Value $Key1ValueData
     Write-Output "$Key1ValueName added to $Key1Path"
 
