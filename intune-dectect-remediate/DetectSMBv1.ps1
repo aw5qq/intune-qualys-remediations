@@ -3,7 +3,7 @@
 
 $SMBv1 = Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
 
-if ($SMBv1 -eq $null) {
+if ($null -eq $SMBv1) {
     Write-Host "SMBv1 protocol feature not found."
     Exit 0
 }
