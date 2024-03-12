@@ -1,7 +1,6 @@
-﻿# Author: Andrew Welch (aw5qq@lawschool.virginia.edu)
-# This script is designed to trigger a Qualys user agent to perform a scan.
+﻿# Author: Andrew Welch (aw5qq@virginia.edu)
+# Description: This script triggers a Qualys user agent scan.
 
-# Set the ScanOnDemand variable to 1 to trigger a scan.
 $ScanOnDemand = 1
 
 $paths = @(
@@ -10,5 +9,15 @@ $paths = @(
 )
 
 foreach ($path in $paths) {
-    Set-ItemProperty –Path $path -Name "ScanOnDemand" -Value $ScanOnDemand
+    try {
+        if (Test-Path $path) {
+            Set-ItemProperty -Path $path -Name "ScanOnDemand" -Value $ScanOnDemand
+            Write-Host "Successfully set 'ScanOnDemand' property for path: $path"
+        } else {
+            Write-Host "Registry key does not exist: $path"
+        }
+    } catch {
+        Write-Host "Failed to set 'ScanOnDemand' property for path: $path"
+        Write-Host "Error: $_"
+    }
 }
