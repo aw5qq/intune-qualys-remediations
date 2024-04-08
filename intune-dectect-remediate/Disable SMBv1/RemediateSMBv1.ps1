@@ -1,5 +1,5 @@
 # Author: Andrew Welch (aw5qq@virginia.edu)
-# Description: This script detects SMBv1 protocol
+# Description: This script disables SMBv1 protocol
 
 $SMBv1 = Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
 
