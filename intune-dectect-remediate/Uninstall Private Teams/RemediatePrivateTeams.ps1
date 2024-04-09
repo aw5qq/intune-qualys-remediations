@@ -2,8 +2,14 @@
 # Description: This script removes the Private Teams app
 
 try{
-    Get-AppxPackage -Name MicrosoftTeams -allusers | Remove-AppxPackage -ErrorAction stop
-    Write-Host "Private MS Teams app successfully removed"
+    $teamsPackage = Get-AppxPackage -Name MicrosoftTeams -AllUsers -ErrorAction Stop
+
+    if ($teamsPackage) {
+        $teamsPackage | Remove-AppxPackage -ErrorAction Stop
+        Write-Host "Private MS Teams app successfully removed"
+    } else {
+        Write-Host "Microsoft Teams app not found"
+    }
 }catch{
     Write-Error "Error removing Microsoft Teams app"
 }
