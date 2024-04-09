@@ -3,8 +3,8 @@
 
 if ($null -eq (Get-AppxPackage -Name MicrosoftTeams -AllUsers)) {
 	Write-Host "Private MS Teams client is not installed"
-	#exit 0
+	exit 0
 } else {
 	Write-Host "Private MS Teams client is installed"
-	#Exit 1
+	Exit 1
 }
