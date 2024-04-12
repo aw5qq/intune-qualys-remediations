@@ -2,9 +2,9 @@
 # Description: This script sets the Office Update Branch
 
 $officeUpdatePath = "HKLM:\SOFTWARE\Policies\Microsoft\office\16.0\common\officeupdate"
-$officeUpdateBranch = "MonthlyEnterprise"
+#$officeUpdateBranch = "MonthlyEnterprise"
 #$officeUpdateBranch = "Current"
-#$officeUpdateBranch = "PerpetualVL2021"
+$officeUpdateBranch = "PerpetualVL2021"
 
 if (Test-Path $officeUpdatePath) {
     $currentBranch = (Get-ItemProperty -Path $officeUpdatePath).UpdateBranch
