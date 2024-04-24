@@ -5,7 +5,9 @@
 $applications = @(
   "Mozilla.Firefox",
   "Google.Chrome",
-  "Microsoft.Edge"
+  "Microsoft.Edge",
+  "VideoLAN.VLC",
+  "Zoom.Zoom"
 )
 
 $wingetexe = (Get-Command winget.exe).Source
@@ -30,3 +32,5 @@ foreach ($app in $applications) {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
 }
+
+
