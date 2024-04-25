@@ -10,16 +10,18 @@ $applications = @(
   "Zoom.Zoom"
 )
 
-$wingetexe = (Get-Command winget.exe).Source
-
-# Check if the alias already exists
+# Check if the alias already exists and remove it if it does
 if (Get-Alias sysget -ErrorAction SilentlyContinue) {
-  # Remove the alias if it already exists
   Remove-Item alias:sysget
 }
 
-# Create the sysget alias so winget can be run as system
-New-Alias -Name sysget -Value "$wingetexe" -ErrorAction SilentlyContinue
+# Check if winget.exe is available
+if ($wingetexe) {
+  # Create the sysget alias
+  New-Alias -Name sysget -Value "$wingetexe" -ErrorAction SilentlyContinue
+} else {
+  Write-Host "Winget is not installed. Please install winget before running this script."
+}
 
 # Define the region to use for the upgrade
 $region = "US"
@@ -27,10 +29,9 @@ $region = "US"
 # Loop through the list and upgrade each application
 foreach ($app in $applications) {
   try {
-    sysget upgrade --id $app --accept-package-agreements --include-unknown --accept-source-agreements --accept-package-agreements --locale $region
+    Write-Host "Upgrading application: $app"
+    sysget upgrade --id $app --accept-package-agreements --include-unknown --accept-source-agreements --locale $region
   } catch {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
 }
-
-
