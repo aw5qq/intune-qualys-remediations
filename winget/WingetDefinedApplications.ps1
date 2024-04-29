@@ -1,6 +1,10 @@
 # Author: Andrew Welch (aw5qq@virginia.edu))
 # Description: This script will upgrade listed applications using winget
 
+# Get the latest download URL for winget
+Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller_8wekyb3d8bbwe
+
+
 # Define a list of applications to upgrade
 $applications = @(
   "Mozilla.Firefox",

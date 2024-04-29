@@ -39,8 +39,8 @@ CheckValues -Path $registryKey2 -Name $value2 -ExpectedData $expectedData2
 # Output the results
 if ($issues.Count -gt 0) {
     Write-Output "Issues found: $($issues -join ', ')"
-    Exit 0
+    Exit 1
 } else {
     Write-Output "All checks passed."
-    Exit 1
+    Exit 0
 }
