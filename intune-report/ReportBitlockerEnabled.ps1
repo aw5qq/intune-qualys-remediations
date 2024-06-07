@@ -10,3 +10,4 @@ if ($BitlockerStatus.VolumeStatus -eq "FullyEncrypted"){
     Write-Output "Bitlocker is not enabled"
     Exit 1
 }
+
