@@ -31,25 +31,25 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 }
 
 # Get the list of installed applications needing an upgrade
-$upgradePackages = winget upgrade --id --name --source --version
+$upgradePackages = winget upgrade --all 
 
+# Check if any applications need to be upgraded
 if ($upgradePackages.Count -eq 0) {
-    Write-Host "No applications needing an upgrade were found."
-    Exit
+    Write-Host "All applications are up to date."
 }
 
-# Display upgradeable packages
+# Display the list of applications needing an upgrade
 $upgradePackages | ForEach-Object {
-    Write-Host "$($_.Name) - Installed Version: $($_.InstalledVersion) - Available Version: $($_.AvailableVersion)"
+    Write-Host "Upgrade $($_.Name) from version $($_.InstalledVersion) to version $($_.AvailableVersion)"
 }
 
 # Upgrade all applications needing an upgrade
-$upgradePackages | ForEach-Object {
-    Write-Host "Upgrading $($_.Name) from version $($_.InstalledVersion) to version $($_.AvailableVersion)"
-    winget upgrade --id $_.Id --accept-package-agreements --accept-source-agreements
-    if ($?) {
-        Write-Host "Successfully upgraded $($_.Name) to version $($_.AvailableVersion)"
-    } else {
-        Write-Host "Failed to upgrade $($_.Name)"
-    }
-}
+#$upgradePackages | ForEach-Object {
+#    Write-Host "Upgrading $($_.Name) from version $($_.InstalledVersion) to version $($_.AvailableVersion)"
+#    winget upgrade --id $_.Id --accept-package-agreements --accept-source-agreements
+#    if ($?) {
+#        Write-Host "Successfully upgraded $($_.Name) to version $($_.AvailableVersion)"
+#    } else {
+#        Write-Host "Failed to upgrade $($_.Name)"
+#    }
+#}
