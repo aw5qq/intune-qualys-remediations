@@ -14,9 +14,10 @@ Add-AppxPackage -RegisterByFamilyName -MainPackage Microsoft.DesktopAppInstaller
 $applications = @(
   "Google.Chrome",
   "Microsoft.Edge",
-  "Mozilla.Firefox",
-  "VideoLAN.VLC",
-  "Zoom.Zoom"
+  #"Microsoft.EdgeWebView2Runtime",
+  "Mozilla.Firefox"
+  #"VideoLAN.VLC"
+  #"Zoom.Zoom"
 )
 
 # Check if the alias already exists and remove it if it does
@@ -41,7 +42,8 @@ $region = "US"
 foreach ($app in $applications) {
   try {
     Write-Host "Upgrading application: $app"
-    sysget upgrade --id $app --accept-source-agreements --accept-package-agreements --include-unknown --locale $region --silent --force
+    sysget upgrade --id $app --accept-source-agreements --accept-package-agreements 
+    # --locale $region --silent --force
   } catch {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
   }
