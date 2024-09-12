@@ -42,7 +42,7 @@ $region = "US"
 foreach ($app in $applications) {
   try {
     Write-Host "Upgrading application: $app"
-    sysget upgrade --id $app --accept-source-agreements --accept-package-agreements 
+    sysget upgrade --id $app --accept-source-agreements --accept-package-agreements
     # --locale $region --silent --force
   } catch {
     Write-Host "An unexpected error occurred while upgrading ${app}: $_"
