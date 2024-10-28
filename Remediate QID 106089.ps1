@@ -46,6 +46,7 @@ InstallLatestAspNetCoreRuntime
 Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.32" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.17" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.31" -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.35" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\7.0.7" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\7.0.20" -Recurse -Force -ErrorAction SilentlyContinue
 

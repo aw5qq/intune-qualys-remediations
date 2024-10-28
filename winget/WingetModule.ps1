@@ -48,7 +48,7 @@ if ($upgradePackages.Count -eq 0) {
 # Upgrade all applications needing an upgrade
 $upgradePackages | ForEach-Object {
     # Update the package using the Update-WinGetPackage cmdlet
-    $result = Update-WinGetPackage -Id $_.Id -AcceptPackageAgreements -AcceptSourceAgreements -IncludeUnknown -Locale "US"
+    $result = Update-WinGetPackage -Id $_.Id --accept-package-agreements --locale "US"
 
     if ($result -eq "Success") {
         Write-Host "Upgraded $($_.Name) from version $($_.InstalledVersion) to version $($_.AvailableVersions[0])"
