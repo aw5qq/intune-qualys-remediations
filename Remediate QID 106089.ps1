@@ -3,6 +3,7 @@
 # QID: 106089
 
 # 2024-07-01 Update: Added removal of .NET Core below 8.0.6
+# 2024-12-19 Update: Modified removal of .NET Core below 8.0.10 & consolidated path removals for .NET Core 3, 5, 6, and 7
 
 # Install the .NET Core Uninstall Tool using MSI installer
 function InstallDotNetCoreUninstallTool {
@@ -36,17 +37,21 @@ function InstallLatestAspNetCoreRuntime {
 InstallDotNetCoreUninstallTool
 
 # Uninstal any ASP.NET Core Runtime versions below 
-dotnet-core-uninstall remove --aspnet-runtime --all-below 8.0.6 -y
-dotnet-core-uninstall remove --runtime --all-below 8.0.6 -y
-dotnet-core-uninstall remove --sdk --all-below 8.0.6 -y
-dotnet-core-uninstall remove --hosting-bundle --all-below 8.0.6 -y
+dotnet-core-uninstall remove --aspnet-runtime --all-below 8.0.10 -y
+dotnet-core-uninstall remove --runtime --all-below 8.0.10 -y
+dotnet-core-uninstall remove --sdk --all-below 8.0.10 -y
+dotnet-core-uninstall remove --hosting-bundle --all-below 8.0.10 -y
 
 InstallLatestAspNetCoreRuntime
 
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.1.32" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.17" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.31" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.35" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\7.0.7" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\7.0.20" -Recurse -Force -ErrorAction SilentlyContinue
+# Remove old versions of .NET Core 
+$paths = @("3.*", "5.*", "6.*", "7.*")
+
+foreach ($path in $paths) {
+    Get-ChildItem -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\" -Filter $path | ForEach-Object {
+        if (Test-Path $_.FullName) {
+            Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
 

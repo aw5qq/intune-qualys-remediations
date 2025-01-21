@@ -20,7 +20,7 @@ try {
     }
     
     # Create the registry key and value for Key1
-    Set-ItemProperty -Path $Key1Path -Name $Key1ValueName -Value $Key1ValueData
+    Set-ItemProperty -Path $Key1Path -Name $Key1ValueName -Value $Key1ValueData -Type DWord
     Write-Output "$Key1ValueName added to $Key1Path"
 
     # Create the registry key path for Key2 if it doesn't exist
@@ -30,7 +30,7 @@ try {
     }
 
     # Create the registry key and value for Key2
-    Set-ItemProperty -Path $Key2Path -Name $Key2ValueName -Value $Key2ValueData
+    Set-ItemProperty -Path $Key2Path -Name $Key2ValueName -Value $Key2ValueData Type DWord
 
     Write-Output "$Key2ValueName added to $Key2Path"
 

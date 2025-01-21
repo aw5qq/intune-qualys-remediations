@@ -19,13 +19,15 @@ function CheckValues {
         [string]$Name,
         [string]$ExpectedData
     )
-    
+
     if (Test-Path $Path) {
         $data = (Get-ItemProperty -Path $Path).$Name
         if ($null -eq $data) {
             $issues += "Value '$Name' does not exist in '$Path'"
         } elseif ($data -ne $ExpectedData) {
             $issues += "Value '$Name' in '$Path' does not match expected data. Found: '$data', Expected: '$ExpectedData'"
+        } elseif ((Get-ItemProperty -Path $Path).$Name.GetType().Name -ne "Int32") {
+            $issues += "Value '$Name' in '$Path' is not of type D-WORD"
         }
     } else {
         $issues += "Registry Key does not exist: '$Path'"
