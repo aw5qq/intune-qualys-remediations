@@ -1,42 +1,57 @@
-﻿# Author: Andrew Welch (aw5qq@virginia.edu)
-# Description: This script remediates the "EnableCertPaddingCheck" registry key to prevent the "CertPaddingCheck" vulnerability.
-# QID: 378332
+﻿# QID: 378332
 
-# Define the registry key paths and values to add
-$Key1Path = "HKLM:\SOFTWARE\Microsoft\Cryptography\Wintrust\Config"
-$Key1ValueName = "EnableCertPaddingCheck"
-$Key1ValueData = "1"
+# PowerShell script to enable CertPaddingCheck and ensure DWORD type
 
-$Key2Path = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Cryptography\Wintrust\Config"
-$Key2ValueName = "EnableCertPaddingCheck"
-$Key2ValueData = "1"
+# Define the registry key paths
+$regPaths = @(
+    "HKLM:\Software\Microsoft\Cryptography\Wintrust\Config",
+    "HKLM:\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config"
+)
 
+# Registry key value name and data
+$keyName = "EnableCertPaddingCheck"
+$keyValue = 1  # DWORD value
 
-try {
-    # Create the registry key path for Key1 if it doesn't exist
-    if (!(Test-Path $Key1Path)) {
-        New-Item -Path $Key1Path -Force
-        Write-Output "$Key1Path Created"
+# Function to check if the registry value is DWORD, delete if not
+function Ensure-DWORDValue {
+    param (
+        [string]$path,
+        [string]$name,
+        [int]$value
+    )
+
+    # Check if the registry key exists
+    if (Test-Path $path) {
+        # Check if the registry value exists
+        if (Test-Path "$path\$name") {
+            # Get the current value type
+            $currentValueType = (Get-ItemProperty -Path $path -Name $name).PSObject.Properties[$name].TypeNameOfValue
+            
+            if ($currentValueType -ne 'System.Int32') {
+                # If it's not DWORD (System.Int32), delete the key
+                Write-Host "Deleting existing registry value because it is not DWORD."
+                Remove-ItemProperty -Path $path -Name $name
+            }
+        }
     }
-    
-    # Create the registry key and value for Key1
-    Set-ItemProperty -Path $Key1Path -Name $Key1ValueName -Value $Key1ValueData -Type DWord
-    Write-Output "$Key1ValueName added to $Key1Path"
 
-    # Create the registry key path for Key2 if it doesn't exist
-    if (!(Test-Path $Key2Path)) {
-        New-Item -Path $Key2Path -Force 
-        Write-Output "$Key2Path Created"
+    # Create or update the registry value as DWORD
+    Set-ItemProperty -Path $path -Name $name -Value $value
+    Write-Host "Set registry key: $path\$name = $value"
+}
+
+# Apply changes for both registry paths
+foreach ($path in $regPaths) {
+    # Ensure the registry path exists
+    if (-not (Test-Path $path)) {
+        Write-Host "Creating registry path: $path"
+        New-Item -Path $path -Force
     }
 
-    # Create the registry key and value for Key2
-    Set-ItemProperty -Path $Key2Path -Name $Key2ValueName -Value $Key2ValueData Type DWord
-
-    Write-Output "$Key2ValueName added to $Key2Path"
-
-    Write-Output "Registry updated successfully."
-}
-catch {
-    Write-Output "Error occurred while updating the registry: $_"
+    # Ensure DWORD value for CertPaddingCheck
+    Ensure-DWORDValue -path $path -name $keyName -value $keyValue
 }
 
+Write-Host "Successfully enabled CertPaddingCheck with DWORD value. Please test thoroughly in your environment."
+
+# End of script

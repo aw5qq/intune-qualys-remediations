@@ -27,7 +27,7 @@ function CheckValues {
         } elseif ($data -ne $ExpectedData) {
             $issues += "Value '$Name' in '$Path' does not match expected data. Found: '$data', Expected: '$ExpectedData'"
         } elseif ((Get-ItemProperty -Path $Path).$Name.GetType().Name -ne "Int32") {
-            $issues += "Value '$Name' in '$Path' is not of type D-WORD"
+            $issues += "Value '$Name' in '$Path' is not of type DWORD"
         }
     } else {
         $issues += "Registry Key does not exist: '$Path'"
