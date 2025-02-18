@@ -4,6 +4,8 @@
 
 # 2024-07-01 Update: Added removal of .NET Core below 8.0.6
 # 2024-12-19 Update: Modified removal of .NET Core below 8.0.10 & consolidated path removals for .NET Core 3, 5, 6, and 7
+# 2025-02-18 Update: Added more logical error handling for .NET Core Uninstall Tool installation and .NET Core version removal
+# 2025-02-18 Update: Added environment variable to remove drive letter dependency for file system cleanup
 
 # Install the .NET Core Uninstall Tool using MSI installer
 function InstallDotNetCoreUninstallTool {
@@ -33,25 +35,37 @@ function InstallLatestAspNetCoreRuntime {
 }
 
 
-
+#Install the .NET Core Uninstall Tool
 InstallDotNetCoreUninstallTool
 
-# Uninstal any ASP.NET Core Runtime versions below 
-dotnet-core-uninstall remove --aspnet-runtime --all-below 8.0.10 -y
-dotnet-core-uninstall remove --runtime --all-below 8.0.10 -y
-dotnet-core-uninstall remove --sdk --all-below 8.0.10 -y
-dotnet-core-uninstall remove --hosting-bundle --all-below 8.0.10 -y
-
-InstallLatestAspNetCoreRuntime
-
-# Remove old versions of .NET Core 
-$paths = @("3.*", "5.*", "6.*", "7.*")
-
-foreach ($path in $paths) {
-    Get-ChildItem -Path "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\" -Filter $path | ForEach-Object {
-        if (Test-Path $_.FullName) {
-            Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
-        }
-    }
+# Uninstall any ASP.NET Core Runtime versions below 
+if (Get-Command dotnet-core-uninstall -ErrorAction SilentlyContinue) {
+    dotnet-core-uninstall remove --aspnet-runtime --all-below 8.0.10 -y
+    dotnet-core-uninstall remove --runtime --all-below 8.0.10 -y
+    dotnet-core-uninstall remove --sdk --all-below 8.0.10 -y
+    dotnet-core-uninstall remove --hosting-bundle --all-below 8.0.10 -y
+} else {
+    Write-Host "dotnet-core-uninstall tool is not installed."
 }
 
+# Clean up old .NET Core versions from the file system
+$path = "*"
+
+    $dotnetPath = Join-Path $env:ProgramFiles "dotnet\shared\Microsoft.NETCore.App"
+    Get-ChildItem -Path $dotnetPath -Filter $path -Directory | ForEach-Object {
+        try {
+            if (Test-Path $_.FullName) {
+                Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction Stop
+                Write-Host "Successfully removed: $($_.FullName)"
+            }
+        } catch {
+            Write-Host "Failed to remove: $($_.FullName). Error: $($_.Exception.Message)"
+        }
+    }
+    
+    if (Test-Path $dotnetPath) {
+        Write-Host "Access to the directory '$dotnetPath' was denied." -ForegroundColor Red
+    }
+
+# Install the latest ASP.NET Core Runtime
+InstallLatestAspNetCoreRuntime
