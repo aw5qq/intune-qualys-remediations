@@ -49,23 +49,24 @@ if (Get-Command dotnet-core-uninstall -ErrorAction SilentlyContinue) {
 }
 
 # Clean up old .NET Core versions from the file system
-$path = "*"
 
-    $dotnetPath = Join-Path $env:ProgramFiles "dotnet\shared\Microsoft.NETCore.App"
-    Get-ChildItem -Path $dotnetPath -Filter $path -Directory | ForEach-Object {
-        try {
-            if (Test-Path $_.FullName) {
-                Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction Stop
-                Write-Host "Successfully removed: $($_.FullName)"
-            }
-        } catch {
-            Write-Host "Failed to remove: $($_.FullName). Error: $($_.Exception.Message)"
+$dotnetPath = Join-Path $env:ProgramFiles "dotnet\shared\Microsoft.NETCore.App"
+
+Get-ChildItem -Path $dotnetPath -Filter $path -Directory | ForEach-Object {
+    try {
+        if (Test-Path $_.FullName) {
+            Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction Stop
+            Write-Host "Successfully removed: $($_.FullName)"
         }
+    } 
+    catch {
+        Write-Host "Failed to remove: $($_.FullName). Error: $($_.Exception.Message)"
     }
+}
     
-    if (Test-Path $dotnetPath) {
-        Write-Host "Access to the directory '$dotnetPath' was denied." -ForegroundColor Red
-    }
+if (Test-Path $dotnetPath) {
+    Write-Host "Access to the directory '$dotnetPath' was denied." -ForegroundColor Red
+}
 
 # Install the latest ASP.NET Core Runtime
 InstallLatestAspNetCoreRuntime
