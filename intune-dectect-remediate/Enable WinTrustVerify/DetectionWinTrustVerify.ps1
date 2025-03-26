@@ -1,46 +1,48 @@
 # Author: Andrew Welch (aw5qq@virginia.edu)
-# Description: This script checks if the WinTrustVerify setting is enabled 
+# Description: Checks if the WinTrustVerify setting is enabled with proper type
 
 $registryKey1 = "HKLM:\SOFTWARE\Microsoft\Cryptography\Wintrust\Config"
 $registryKey2 = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Cryptography\Wintrust\Config"
 
-$value1 = "EnableCertPaddingCheck"
-$expectedData1 = "1"
-
-$value2 = "EnableCertPaddingCheck"
-$expectedData2 = "1"
+$valueName = "EnableCertPaddingCheck"
+$expectedData = 1  # Use integer for proper comparison
 
 $issues = @()
 
-# Function to check a registry value
 function CheckValues {
     param (
         [string]$Path,
         [string]$Name,
-        [string]$ExpectedData
+        [int]$ExpectedData
     )
 
     if (Test-Path $Path) {
-        $data = (Get-ItemProperty -Path $Path).$Name
-        if ($null -eq $data) {
-            $issues += "Value '$Name' does not exist in '$Path'"
-        } elseif ($data -ne $ExpectedData) {
-            $issues += "Value '$Name' in '$Path' does not match expected data. Found: '$data', Expected: '$ExpectedData'"
-        } elseif ((Get-ItemProperty -Path $Path).$Name.GetType().Name -ne "Int32") {
-            $issues += "Value '$Name' in '$Path' is not of type DWORD"
+        try {
+            $reg = Get-ItemProperty -Path $Path -ErrorAction Stop
+            $data = $reg.$Name
+
+            if ($null -eq $data) {
+                $issues += "Value '$Name' does not exist in '$Path'"
+            } elseif ($data -ne $ExpectedData) {
+                $issues += "Value '$Name' in '$Path' does not match expected data. Found: '$data', Expected: '$ExpectedData'"
+            } elseif ($reg.$Name.GetType().Name -ne "Int32") {
+                $issues += "Value '$Name' in '$Path' is not of type D-WORD"
+            }
+        } catch {
+            $issues += "Failed to read registry at '$Path'. Error: $_"
         }
     } else {
         $issues += "Registry Key does not exist: '$Path'"
     }
 }
 
-# Check the registry values
-CheckValues -Path $registryKey1 -Name $value1 -ExpectedData $expectedData1
-CheckValues -Path $registryKey2 -Name $value2 -ExpectedData $expectedData2
+# Perform checks
+CheckValues -Path $registryKey1 -Name $valueName -ExpectedData $expectedData
+CheckValues -Path $registryKey2 -Name $valueName -ExpectedData $expectedData
 
-# Output the results
+# Output results
 if ($issues.Count -gt 0) {
-    Write-Output "Issues found: $($issues -join ', ')"
+    Write-Output "Issues found:`n$($issues -join "`n")"
     Exit 1
 } else {
     Write-Output "All checks passed."
