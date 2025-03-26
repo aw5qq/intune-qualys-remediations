@@ -43,4 +43,4 @@ if ($success) {
 } else {
     Write-Output "Remediation encountered errors."
     Exit 1
-}
+}   
